@@ -1,13 +1,6 @@
 import pytest
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-
-
-def login(driver, username, password):
-    driver.find_element(By.ID, "user-name").send_keys(username)
-    driver.find_element(By.ID, "password").send_keys(password)
-    driver.find_element(By.ID, "login-button").click()
+from pages.login_page import LoginPage
+from pages.inventory_page import InventoryPage
 
 
 def test_login_page_title(driver):
@@ -15,12 +8,10 @@ def test_login_page_title(driver):
 
 
 def test_login_success(driver):
-    login(driver, "standard_user", "secret_sauce")
+    LoginPage(driver).login("standard_user", "secret_sauce")
 
-    titre = WebDriverWait(driver, 10).until(
-        EC.visibility_of_element_located((By.CLASS_NAME, "title"))
-    )
-    assert titre.text == "Products"
+    inventory = InventoryPage(driver)
+    assert inventory.get_title() == "Products"
     assert "inventory" in driver.current_url
 
 
@@ -35,9 +26,7 @@ def test_login_success(driver):
     ],
 )
 def test_login_errors(driver, username, password, message_attendu):
-    login(driver, username, password)
+    login_page = LoginPage(driver)
+    login_page.login(username, password)
 
-    erreur = WebDriverWait(driver, 10).until(
-        EC.visibility_of_element_located((By.CSS_SELECTOR, "[data-test='error']"))
-    )
-    assert message_attendu in erreur.text
+    assert message_attendu in login_page.get_error_message()
