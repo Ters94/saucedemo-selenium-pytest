@@ -25,7 +25,7 @@ Projet d'automatisation de tests QA sur le site de démonstration [Sauce Demo](h
 
 ```
 ├── tests/          # Fichiers de tests
-├── pages/          # Page Objects (à venir)
+├── pages/          # Page Objects (LoginPage, InventoryPage)
 ├── conftest.py     # Fixtures partagées (driver, utilisateur connecté)
 ├── pytest.ini      # Configuration de pytest
 └── requirements.txt
